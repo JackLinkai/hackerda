@@ -8,13 +8,16 @@ import com.google.common.collect.Sets;
 import com.hackerda.platform.infrastructure.database.model.UrpClassroom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.web.server.LocalManagementPort;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -29,7 +32,8 @@ public class EmptyRoomService {
     private EmptyRoomDao emptyRoomDao;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
+    
+    private Map<String,ReentrantLock>lockMap=new HashMap<>();
 
     /**
      * 对数据进行楼层筛选,如果楼层为0，则不进行筛选
@@ -64,26 +68,39 @@ public class EmptyRoomService {
      * @param floor
      * @return
      */
-    public List<EmptyRoomVo> getFullEmptyRoomReply(String week, String teaNum, int dayOfWeek, int floor) {
-        Map<String, EmptyRoom> classRoomMap = new HashMap<>();
-        List<Integer> orderList = Lists.newArrayList(1, 3, 5, 7, 9);
+	public List<EmptyRoomVo> getFullEmptyRoomReply(String week, String teaNum, int dayOfWeek, int floor) {
+	  try { 
+			ValueOperations<String, String> opsForValue = stringRedisTemplate.opsForValue();
+			Map<String, EmptyRoom> classRoomMap = new HashMap<>();
+			List<Integer> orderList = Lists.newArrayList(1, 3, 5, 7, 9);
+			if (stringRedisTemplate.keys("empty_Room_data::" + week + teaNum + "*").size() == 0) {
+				if (!lockMap.containsKey(week + teaNum)) {
+					synchronized (this) {
+						if (!lockMap.containsKey(week + teaNum))
+							lockMap.put(week + teaNum, new ReentrantLock());
+					}
+				}
+				lockMap.get(week + teaNum).lock();
+			}
+			for (int order : orderList) {
+				List<UrpClassroom> emptyRoomReply = getEmptyRoomReply(week, teaNum, dayOfWeek, order, floor);
+				for (UrpClassroom room : emptyRoomReply) {
+					if (classRoomMap.containsKey(room.getNumber())) {
+						classRoomMap.get(room.getNumber()).addOrder(order);
+					} else {
+						classRoomMap.put(room.getNumber(), new EmptyRoom(room));
+					}
+				}
+			}
+			return classRoomMap.values().stream()
+					.map(emptyRoom -> new EmptyRoomVo(emptyRoom.getRoom(), emptyRoom.getOrderList()))
+					.sorted(Comparator.comparing(o -> o.getUrpClassroom().getNumber())).collect(Collectors.toList());
 
-        for (int order : orderList) {
-            List<UrpClassroom> emptyRoomReply = getEmptyRoomReply(week, teaNum, dayOfWeek, order, floor);
-            for (UrpClassroom room : emptyRoomReply) {
-                if (classRoomMap.containsKey(room.getNumber())) {
-                    classRoomMap.get(room.getNumber()).addOrder(order);
-                } else {
-                    classRoomMap.put(room.getNumber() , new EmptyRoom(room));
-                }
-            }
-        }
-
-        return classRoomMap.values().stream()
-                .map(emptyRoom -> new EmptyRoomVo(emptyRoom.getRoom(), emptyRoom.getOrderList()))
-                .sorted(Comparator.comparing(o -> o.getUrpClassroom().getNumber()))
-                .collect(Collectors.toList());
-    }
+		} finally {
+			if (lockMap.get(week + teaNum) != null && lockMap.get(week + teaNum).isLocked())
+				lockMap.get(week + teaNum).unlock();
+		}
+	}
 
 }
 
