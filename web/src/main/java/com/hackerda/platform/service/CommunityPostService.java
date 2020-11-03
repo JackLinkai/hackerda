@@ -181,7 +181,6 @@ public class CommunityPostService {
     private PostDetailVO getPostDetailVO(String userName, List<PostDetailBO> detailBOList) {
         List<PostVO> postVOList = detailBOList.stream()
                 .map(this::getPostVO)
-                .sorted(Comparator.comparing(PostVO :: getPostTime).reversed())
                 .collect(Collectors.toList());
 
         for (PostVO postVO : postVOList) {
