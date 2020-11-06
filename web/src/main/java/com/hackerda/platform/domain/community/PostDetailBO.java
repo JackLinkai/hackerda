@@ -24,6 +24,8 @@ public class PostDetailBO extends PostBO {
     /** 查看总数 **/
     private int viewCount = 0;
 
+    private Date lastReplyTime;
+
 
     public PostDetailBO(long id, String userName, String content, List<ImageInfo> imageInfoList,
                         IdentityCategory identityCategory, String equipment) {

@@ -1,5 +1,6 @@
 package com.hackerda.platform.infrastructure.community;
 
+import com.google.common.collect.Lists;
 import com.hackerda.platform.domain.community.IdentityCategory;
 import com.hackerda.platform.domain.community.RecordStatus;
 import com.hackerda.platform.infrastructure.database.mapper.ext.PostExtMapper;
@@ -39,7 +40,8 @@ public class IdentityCategoryRedisFilterScript {
         PostExample example = new PostExample();
         example.createCriteria()
                 .andRecordStatusEqualTo(RecordStatus.Release.getCode())
-                .andIdentityCodeEqualTo(IdentityCategory.Anonymous.getCode());
+                .andIdentityCodeIn(Lists.newArrayList(IdentityCategory.Anonymous.getCode(),
+                        IdentityCategory.College.getCode(), IdentityCategory.Grade.getCode()));
 
 
         List<Post> posts = postExtMapper.selectByExample(example);
@@ -65,7 +67,9 @@ public class IdentityCategoryRedisFilterScript {
         PostExample example = new PostExample();
         example.createCriteria()
                 .andRecordStatusEqualTo(RecordStatus.Hide.getCode())
-                .andIdentityCodeEqualTo(IdentityCategory.Anonymous.getCode());
+                .andIdentityCodeIn(Lists.newArrayList(IdentityCategory.Anonymous.getCode(),
+                        IdentityCategory.College.getCode(), IdentityCategory.Grade.getCode()));
+
 
 
         List<Post> posts = postExtMapper.selectByExample(example);

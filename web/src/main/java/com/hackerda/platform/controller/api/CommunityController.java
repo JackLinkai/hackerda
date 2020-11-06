@@ -71,6 +71,15 @@ public class CommunityController {
         return WebResponse.success(communityPostService.getPostDetail(username, startId, count, appId, openid));
     }
 
+    @GetMapping("/getRecentlyPost")
+    public WebResponse<PostDetailVO> getRecentlyPost(@RequestParam(value = "timestamp", required = false) Long timestamp,
+                                             @RequestParam(value = "count") int count,
+                                             @RequestParam(value = "appId", required = false) String appId,
+                                             @RequestParam(value = "openid", required = false) String openid){
+        String username = SecurityUtils.getSubject().getPrincipal().toString();
+        return WebResponse.success(communityPostService.getRecentlyPost(username, timestamp, count, appId, openid));
+    }
+
     @GetMapping("/getRecommendPost")
     public WebResponse<PostDetailVO> getRecommendPost(@RequestParam(value = "appId", required = false) String appId,
                                                       @RequestParam(value = "openid", required = false) String openid){

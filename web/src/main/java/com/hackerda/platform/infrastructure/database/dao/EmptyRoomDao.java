@@ -52,11 +52,6 @@ public class EmptyRoomDao {
             return Collections.emptyList();
         }
 
-        List<String> records = new ArrayList<>();
-        for (EmptyRoomRecord emptyRoomRecord : result.getRecords()) {
-            records.add(emptyRoomRecord.getClassroomName());
-        }
-
         return result.getRecords().stream().map(x -> {
             UrpClassroom urpClassroom = new UrpClassroom();
             urpClassroom.setName(x.getClassroomName());

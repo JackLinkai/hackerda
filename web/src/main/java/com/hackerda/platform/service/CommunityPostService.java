@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,7 +111,8 @@ public class CommunityPostService {
                 .setPostTime(post.getPostTime())
                 .setIdentityCode(post.getIdentityCategory().getCode())
                 .setAnonymous(post.getIdentityCategory().isAnonymous())
-                .setHasDelete(post.isDelete());
+                .setHasDelete(post.isDelete())
+                .setLastReplyTime(post.getLastReplyTime());
 
         List<ImageInfoVO> imageInfoVOList = post.getImageInfoList().stream().map(imageInfo -> {
             ImageInfoVO infoVO = new ImageInfoVO();
@@ -126,6 +128,13 @@ public class CommunityPostService {
 
     public PostDetailVO getPostDetail(String userName, Integer startId, int count, String appId, String openid) {
         List<PostDetailBO> detailBOList = posterRepository.findShowPost(startId, count);
+        return getPostDetailVO(userName, appId, openid, detailBOList);
+    }
+
+    public PostDetailVO getRecentlyPost(String userName, Long timestamp, int count, String appId, String openid) {
+
+        List<PostDetailBO> detailBOList =
+                posterRepository.findShowPostByLastReply(timestamp == null ? null : new Date(timestamp), count);
         return getPostDetailVO(userName, appId, openid, detailBOList);
     }
 
@@ -172,7 +181,6 @@ public class CommunityPostService {
     private PostDetailVO getPostDetailVO(String userName, List<PostDetailBO> detailBOList) {
         List<PostVO> postVOList = detailBOList.stream()
                 .map(this::getPostVO)
-                .sorted(Comparator.comparing(PostVO :: getPostTime).reversed())
                 .collect(Collectors.toList());
 
         for (PostVO postVO : postVOList) {
@@ -191,7 +199,13 @@ public class CommunityPostService {
                 .min(Long::compareUnsigned)
                 .orElse(-1L);
 
+        long nextTimestamp = postVOList.stream()
+                .map(x-> x.getLastReplyTime().getTime())
+                .min(Long::compareUnsigned)
+                .orElse(-1L);
+
         postDetailVO.setNextMaxId(nextMaxId);
+        postDetailVO.setNextTimestamp(nextTimestamp);
 
         return postDetailVO;
     }

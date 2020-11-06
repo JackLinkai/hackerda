@@ -795,6 +795,66 @@ public class PostExample {
             return (Criteria) this;
         }
 
+        public Criteria andLastReplyTimeIsNull() {
+            addCriterion("last_reply_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeIsNotNull() {
+            addCriterion("last_reply_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeEqualTo(Date value) {
+            addCriterion("last_reply_time =", value, "lastReplyTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeNotEqualTo(Date value) {
+            addCriterion("last_reply_time <>", value, "lastReplyTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeGreaterThan(Date value) {
+            addCriterion("last_reply_time >", value, "lastReplyTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("last_reply_time >=", value, "lastReplyTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeLessThan(Date value) {
+            addCriterion("last_reply_time <", value, "lastReplyTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeLessThanOrEqualTo(Date value) {
+            addCriterion("last_reply_time <=", value, "lastReplyTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeIn(List<Date> values) {
+            addCriterion("last_reply_time in", values, "lastReplyTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeNotIn(List<Date> values) {
+            addCriterion("last_reply_time not in", values, "lastReplyTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeBetween(Date value1, Date value2) {
+            addCriterion("last_reply_time between", value1, value2, "lastReplyTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastReplyTimeNotBetween(Date value1, Date value2) {
+            addCriterion("last_reply_time not between", value1, value2, "lastReplyTime");
+            return (Criteria) this;
+        }
+
         public Criteria andGmtCreateIsNull() {
             addCriterion("gmt_create is null");
             return (Criteria) this;

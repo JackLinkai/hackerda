@@ -3,6 +3,7 @@ package com.hackerda.platform.domain.community;
 import com.hackerda.platform.domain.student.StudentAccount;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public interface PosterRepository {
@@ -23,10 +24,14 @@ public interface PosterRepository {
 
     List<PostDetailBO> findShowPost(Integer start, int count);
 
+    List<PostDetailBO> findShowPostByLastReply(Date lastReplyTime, int count);
+
     List<PostDetailBO> findPostByUser(String userName, Integer start, int count);
 
     long countShowPost(String userName, List<IdentityCategory> identityCategoryList);
 
     long findMaxReleasePostId();
+
+    void updateLastReplyTime(long id, Date lastReplyTime);
 
 }

@@ -47,6 +47,8 @@ public class PostBO {
 
     private final String equipment;
 
+    private Date lastReplyTime;
+
 
     public PostBO(String userName, String content, List<ImageInfo> imageInfoList, IdentityCategory identityCategory, String equipment) {
         this(userName, content, imageInfoList, identityCategory, new Date(), equipment);

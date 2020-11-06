@@ -32,6 +32,8 @@ public class Post implements Serializable {
 
     private String equipment;
 
+    private Date lastReplyTime;
+
     private Date gmtCreate;
 
     private Date gmtModify;

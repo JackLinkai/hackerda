@@ -224,6 +224,7 @@ CREATE TABLE `post`
     `like_count`    int(255)     NOT NULL DEFAULT '0',
     `view_count`    int(255)     NOT NULL DEFAULT '0',
     `equipment`     varchar(255) NOT NULL DEFAULT '',
+    `last_reply_time` datetime DEFAULT CURRENT_TIMESTAMP,
     `gmt_create`    timestamp    NULL     DEFAULT CURRENT_TIMESTAMP,
     `gmt_modify`    timestamp    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)

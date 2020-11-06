@@ -65,4 +65,9 @@ public class PostVO {
      * 是否是匿名贴
      */
     private boolean isAnonymous;
+
+    /**
+     * 帖子最后被回复时间
+     */
+    private Date lastReplyTime;
 }

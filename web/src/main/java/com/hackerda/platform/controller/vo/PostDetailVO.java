@@ -9,6 +9,8 @@ public class PostDetailVO {
 
     private long nextMaxId;
 
+    private long nextTimestamp;
+
     private int count;
 
     private List<PostVO> postList;

@@ -1,7 +1,5 @@
 package com.hackerda.platform.domain.student;
 
-import com.hackerda.platform.domain.wechat.WechatUser;
-
 public interface StudentInfoService {
 
     /**

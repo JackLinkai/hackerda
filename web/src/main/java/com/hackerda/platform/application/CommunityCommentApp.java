@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,7 @@ public class CommunityCommentApp {
 
         if(commentBO.isRelease()) {
             eventPublisher.addCommentEvent(commentBO, true);
+            posterRepository.updateLastReplyTime(commentBO.getPostId(), new Date());
         }
 
     }
@@ -60,6 +62,10 @@ public class CommunityCommentApp {
         } else if (likeBO.isShow()) {
             likeRepository.save(likeBO);
             eventPublisher.addLikeEvent(likeBO);
+            if(likeBO.getLikeType() == LikeType.Post) {
+                posterRepository.updateLastReplyTime(likeBO.getTypeContentId(), new Date());
+            }
+
         }
     }
 
