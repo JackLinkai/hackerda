@@ -74,6 +74,7 @@ public class EmptyRoomService {
 			List<Integer> orderList = Lists.newArrayList(1, 3, 5, 7, 9);
 			if (stringRedisTemplate.keys("empty_Room_data::" + week + teaNum + "*").size() == 0) {
 				if (!lockMap.containsKey(week + teaNum)) {
+					//加锁
 					synchronized (this) {
 						if (!lockMap.containsKey(week + teaNum))
 							lockMap.put(week + teaNum, new ReentrantLock());
@@ -96,6 +97,7 @@ public class EmptyRoomService {
 					.sorted(Comparator.comparing(o -> o.getUrpClassroom().getNumber())).collect(Collectors.toList());
 
 		} finally {
+			//解锁
 			if (lockMap.get(week + teaNum) != null && lockMap.get(week + teaNum).isLocked()) {
 				lockMap.get(week + teaNum).unlock();
 				}
