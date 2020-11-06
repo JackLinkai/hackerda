@@ -70,7 +70,6 @@ public class EmptyRoomService {
      */
 	public List<EmptyRoomVo> getFullEmptyRoomReply(String week, String teaNum, int dayOfWeek, int floor) {
 	  try { 
-			ValueOperations<String, String> opsForValue = stringRedisTemplate.opsForValue();
 			Map<String, EmptyRoom> classRoomMap = new HashMap<>();
 			List<Integer> orderList = Lists.newArrayList(1, 3, 5, 7, 9);
 			//加锁部分。
@@ -99,8 +98,9 @@ public class EmptyRoomService {
 
 		} finally {
 			//finally语句块解锁
-			if (lockMap.get(week + teaNum) != null && lockMap.get(week + teaNum).isLocked())
+			if (lockMap.get(week + teaNum) != null && lockMap.get(week + teaNum).isLocked()) {
 				lockMap.get(week + teaNum).unlock();
+				}
 		}
 	}
 
