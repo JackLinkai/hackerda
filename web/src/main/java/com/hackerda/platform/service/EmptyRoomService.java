@@ -72,7 +72,7 @@ public class EmptyRoomService {
 	  try { 
 			Map<String, EmptyRoom> classRoomMap = new HashMap<>();
 			List<Integer> orderList = Lists.newArrayList(1, 3, 5, 7, 9);
-			//加锁部分。
+			//加锁部分
 			if (stringRedisTemplate.keys("empty_Room_data::" + week + teaNum + "*").size() == 0) {
 				if (!lockMap.containsKey(week + teaNum)) {
 					synchronized (this) {
