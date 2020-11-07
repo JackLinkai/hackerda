@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class EmptyRoomService {
-
+	Map<String, EmptyRoom> classRoomMap = new HashMap<>();
     @Autowired
     private EmptyRoomDao emptyRoomDao;
     @Autowired
@@ -70,7 +70,6 @@ public class EmptyRoomService {
      */
 	public List<EmptyRoomVo> getFullEmptyRoomReply(String week, String teaNum, int dayOfWeek, int floor) {
 	  try { 
-			Map<String, EmptyRoom> classRoomMap = new HashMap<>();
 			List<Integer> orderList = Lists.newArrayList(1, 3, 5, 7, 9);
 			if (stringRedisTemplate.keys("empty_Room_data::" + week + teaNum + "*").size() == 0) {
 				if (!lockMap.containsKey(week + teaNum)) {
