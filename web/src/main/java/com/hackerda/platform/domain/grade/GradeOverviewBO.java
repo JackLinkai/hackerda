@@ -20,6 +20,9 @@ public class GradeOverviewBO {
 
     private int gpaRankSize;
 
+    /**
+     * 选修课分
+     */
     private double optionalCourseCredit;
 
     private int errorCode;
